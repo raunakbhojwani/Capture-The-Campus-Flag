@@ -1,0 +1,111 @@
+/*guideagent.c A program which runs on the CS50 Unix Server, accept and validate four command-line arguments, communicates with game server to update the game, present a suitable interface, and logs all its activity to a logfile
+
+
+  Project name: Project Incomputable (Jade)
+  Component name: Guide Agent
+
+  Primary Authors: Max Zhuang, Raunak Bhojwani, Samuel Ching
+  Date Created: 5/22/16
+
+  Special considerations:  
+  (e.g., special compilation options, platform limitations, etc.) 
+  
+  ======================================================================*/
+// do not remove any of these sections, even if they are empty
+//
+// ---------------- Open Issues
+// ---------------- System includes e.g., <stdio.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include <string.h>
+#include <strings.h>
+#include <arpa/inet.h>
+#include <sys/select.h>
+#include <time.h>
+
+// ---------------- Local includes  e.g., "file.h"
+
+#include "../lib/memory.h"
+#include "../lib/message.h"
+#include "../lib/hashtable.h"
+#include "../lib/agent.h"
+#include "../lib/team.h"
+#include "../lib/codedrop.h"
+#include "info.h"
+
+
+// ---------------- Constant definitions
+
+const int HASHSLOTS = 1000;
+
+// ---------------- Macro definitions
+
+// ---------------- Structures/Types
+
+// ---------------- Private variables
+
+// ---------------- Private prototypes
+
+/*====================================================================*/
+
+int
+main (const int argc, char* argv[])
+{
+  int logMode = 0;  // 0 = default game logmode, 1 = raw logmode
+  int logFlag = 0;
+  int guideID = rand();  // default random guideID
+  int guideIDFlag = 0;
+  int GShostArg = 2;
+  int GSportArg = 3;
+
+  if (argc < 4){
+    fprintf(stderr, "usage: %s [-log=raw] teamName GShost GSport [guideID]", argv[0]);
+    exit(1);
+  }
+
+  // operates under assumption that commandline arguments are entered as ordered
+  
+  if (argc > 4){
+    GShostArg = 3;
+    GSportArg = 4;
+    if (strcmp(argv[1], "-log=raw")==0){
+      logMode = 1;
+    }
+    logFlag = 1;
+    if (argv[5] != NULL){
+      guideID = argv[5];
+      guideIDFlag = 1;
+    }
+  }
+    
+  // initialize the data structures
+
+  hashtable_t* teamHash = hashtable_new(HASHSLOTS, team_delete);
+  hashtable_t* codeHash = hashtable_new(HASHSLOTS, code_delete);
+  hashtable_t* agentHash = hashtable_new(HASHSLOTS, agent_delete);
+
+  // A Guide Agent starts up, opens a UDP socket, and announces its presence to the Game Server by using the socket to send a datagram to the Game Server at its preconfigured host/port address.
+
+  char * GShost = assertpc(count_calloc(strlen(argv[GShostArg] + 1), sizeof(char)));
+  int GSport = atoi(argv[GSportArg]);
+  int comm_sock = socket_setup(guideID);
+  struct socaddr_in them = {0, 0, {0}};
+  them->
+  
+  
+  // Continuous while-loop waiting for incoming datagrams
+
+  // Upon successful receipt of a datagram, the message is parsed and the OPCODE is extracted
+
+  // If the OPCODE matches When the send a “hint” to one of its Field Agents, the Guide Agent sends the hint to the Game Server calls on send hint function to the corresponding agent
+  
+  // Else, send an error message back to the offending gameserver
+
+  // Print a graphical summary of game status to terminal
+
+
+  return 0;
+}
